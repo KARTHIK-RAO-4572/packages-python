@@ -1,28 +1,41 @@
 import smtplib
 import random
 import sqlite3
-class generate_otp:
+class send_through_mail:
     def send_otp(receiver):
         try:
-          OTP=random.randint(1000,9999)
-          content='''Dear user,we received a request to create an user with your email in fitness guide app.
-                      Your Verification code is '''+str(OTP)
+          OTP=random.randint(1000,9999)#generate random number betweenn 1000 and 9999
+          content='''write your msg'''+str(OTP)
           server=smtplib.SMTP('smtp.gmail.com',587)
           server.starttls()
-          server.login('feelyourselffit@gmail.com','kmrmqgxduezkpjas')
-          server.sendmail('feelyourselffit@gmail.com',receiver,content)
-          return OTP
+          server.login('sender_email_adress','encrpyted password(16 characters)')
+          #you can find youtube videos to generate encrpyted password for your email
+          server.sendmail('sender_email_adress',receiver,content)
+          return OTP,0 # returns OTP send to receiver
         except:
-           print("error occured while sending OTP")
-class connect_backend():
+          return 1 # returns 1 when any error occured.
+     def send_msg(receiver):
+        try:
+          content='''write your msg'''
+          server=smtplib.SMTP('smtp.gmail.com',587)
+          server.starttls()
+          server.login('sender_email_adress','encrpyted password(16 characters)')
+          #you can find youtube videos to generate encrpyted password for your email
+          server.sendmail('sender_email_adress',receiver,content)
+          return 0 # returns 0 if message is sent .
+        except:
+          return 1 # returns 1 when any error occured.
+           
+class connect_database():
     def __init__(self):
         try:
-           self.connection=sqlite3.connect("main_db.db")
+           self.connection=sqlite3.connect("main.db")
            self.cursor=self.connection.cursor()
-           self.cursor.execute('''CREATE TABLE  IF NOT EXISTS USER_DATA(username sting,password string)''')
+           self.cursor.execute('''CREATE TABLE  IF NOT EXISTS TABLE_NAME(attributes datatype)''')
         except:
             print('error occured while establishing connection with database')
     def insert_user_data(self,data):
+        #data should be a dictionary
         tuplee=(data['user_name'],data['password'])
         insert_query="INSERT INTO USER_DATA VALUES"+str(tuplee)
         self.cursor.execute(insert_query)
